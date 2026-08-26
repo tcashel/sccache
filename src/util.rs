@@ -1229,6 +1229,9 @@ fn windows_path_starts_with(value: &[u8], prefix: &[u8]) -> bool {
 }
 
 #[cfg(any(target_os = "windows", test))]
+/// Match a normalized Windows prefix while treating separator runs as one.
+/// Rust dep-info escapes backslashes, so a separator can occupy multiple bytes.
+/// The returned offset still indexes the original value, avoiding an allocation.
 fn windows_path_prefix_len(value: &[u8], prefix: &[u8]) -> Option<usize> {
     let mut value_index = 0;
     let mut prefix_index = 0;
