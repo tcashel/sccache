@@ -1254,7 +1254,7 @@ pub fn strip_path_basedirs<'a>(value: &'a [u8], basedirs: &[Vec<u8>]) -> &'a [u8
 
     #[cfg(target_os = "windows")]
     {
-        return strip_windows_path_basedirs(value, basedirs);
+        strip_windows_path_basedirs(value, basedirs)
     }
 
     #[cfg(not(target_os = "windows"))]
