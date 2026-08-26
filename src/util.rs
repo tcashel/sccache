@@ -1236,9 +1236,7 @@ fn windows_path_prefix_len(value: &[u8], prefix: &[u8]) -> Option<usize> {
     while prefix_index < prefix.len() {
         if matches!(prefix[prefix_index], b'/' | b'\\') {
             let prefix_start = prefix_index;
-            while prefix_index < prefix.len()
-                && matches!(prefix[prefix_index], b'/' | b'\\')
-            {
+            while prefix_index < prefix.len() && matches!(prefix[prefix_index], b'/' | b'\\') {
                 prefix_index += 1;
             }
 
@@ -1343,12 +1341,12 @@ fn strip_windows_path_basedirs<'a>(value: &'a [u8], basedirs: &[Vec<u8>]) -> &'a
         let exact_match = root.and_then(|root| {
             windows_path_prefix_len(tail, root).filter(|length| *length == tail.len())
         });
-        let match_end = exact_match
-            .or_else(|| prefix.and_then(|prefix| windows_path_prefix_len(tail, prefix)));
-        if let Some(match_end) = match_end {
-            if longest.is_none_or(|(length, _)| configured_len > length) {
-                longest = Some((configured_len, match_end));
-            }
+        let match_end =
+            exact_match.or_else(|| prefix.and_then(|prefix| windows_path_prefix_len(tail, prefix)));
+        if let Some(match_end) = match_end
+            && longest.is_none_or(|(length, _)| configured_len > length)
+        {
+            longest = Some((configured_len, match_end));
         }
     }
 
