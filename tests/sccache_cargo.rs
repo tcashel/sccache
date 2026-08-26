@@ -68,7 +68,6 @@ fn test_rust_cargo_build_across_basedirs() -> Result<()> {
     }
     let first = fs::canonicalize(first)?;
     let second = fs::canonicalize(second)?;
-    let sccache_log = test_info.tempdir.path().join("basedirs.log");
 
     stop_sccache()?;
     let basedirs = env::join_paths([&first, &second])?
@@ -76,14 +75,7 @@ fn test_rust_cargo_build_across_basedirs() -> Result<()> {
         .map_err(|_| anyhow::anyhow!("basedir list is not valid UTF-8"))?;
     restart_sccache(
         &test_info,
-        Some(vec![
-            ("SCCACHE_BASEDIRS".into(), basedirs),
-            ("SCCACHE_LOG".into(), "sccache=trace".into()),
-            (
-                "SCCACHE_ERROR_LOG".into(),
-                sccache_log.to_string_lossy().into_owned(),
-            ),
-        ]),
+        Some(vec![("SCCACHE_BASEDIRS".into(), basedirs)]),
     )?;
 
     let build = |root: &Path| -> Result<()> {
@@ -114,7 +106,6 @@ fn test_rust_cargo_build_across_basedirs() -> Result<()> {
     let reported = PathBuf::from(stdout.trim_end_matches(&['\r', '\n'][..]));
     let reported = fs::canonicalize(&reported)
         .with_context(|| format!("failed to canonicalize reported path {reported:?}"))?;
-    eprintln!("{}", fs::read_to_string(sccache_log)?);
     assert_eq!(reported, first);
 
     fs::write(
