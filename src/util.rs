@@ -1973,10 +1973,7 @@ mod tests {
                 b"\\\\?\\C:\\Users\\Test\\Project\\src\\lib.rs".as_slice(),
                 b"src\\lib.rs".as_slice(),
             ),
-            (
-                b"//?/c:/users/test/project".as_slice(),
-                b"".as_slice(),
-            ),
+            (b"//?/c:/users/test/project".as_slice(), b"".as_slice()),
             (
                 b"\\\\?\\UNC\\Server\\Share\\Project\\src\\lib.rs".as_slice(),
                 b"src\\lib.rs".as_slice(),

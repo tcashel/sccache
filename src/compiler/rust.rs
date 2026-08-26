@@ -243,6 +243,13 @@ const CACHE_VERSION: &[u8] = b"7";
 fn hash_rust_value(digest: &mut Digest, value: &OsStr, basedirs: Option<&[Vec<u8>]>) {
     let encoded = encode_rust_value(value);
     let normalized = basedirs.map_or(encoded, |basedirs| strip_path_basedirs(encoded, basedirs));
+    if basedirs.is_some() {
+        trace!(
+            "Rust basedir hash input: {:?} -> {:?}",
+            String::from_utf8_lossy(encoded),
+            String::from_utf8_lossy(normalized)
+        );
+    }
     digest.update(&(normalized.len() as u64).to_le_bytes());
     digest.update(normalized);
 }
