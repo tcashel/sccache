@@ -4,9 +4,7 @@ name: Benchmarks
 
 on:
   pull_request:
-  push:
-    branches:
-      - '*'
+  workflow_dispatch:
 
 permissions:
   contents: read # to fetch code (actions/checkout)
@@ -18,6 +16,7 @@ concurrency:
 
 jobs:
   benchmarks:
+    if: ${{ github.repository == 'mozilla/sccache' }}
     name: Run ${{ matrix.mode }} benchmarks (CodSpeed)
     runs-on: ubuntu-latest
     strategy:
