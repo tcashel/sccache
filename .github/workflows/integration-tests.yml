@@ -1,5 +1,10 @@
 name: integration-tests
-on: [ push, pull_request ]
+on: [pull_request, workflow_dispatch]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 # If you want to add integration tests for linux-based binary,
 # please, use the following files:
 # - tests/integration/Makefile
@@ -65,6 +70,7 @@ jobs:
           ls ../../target/integration-coverage/reports/lcov.info -l
 
       - name: Upload coverage results (to Codecov.io)
+        if: ${{ github.repository == 'mozilla/sccache' }}
         uses: codecov/codecov-action@v5
         with:
           files: target/integration-coverage/reports/lcov.info
